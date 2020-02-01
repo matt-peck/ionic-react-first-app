@@ -18,8 +18,11 @@ import {
   IonImg,
   IonActionSheet
 } from "@ionic/react";
+import { usePhotoGallery } from "../hooks/usePhotoGallery";
 
 const Tab2: React.FC = () => {
+  const { takePhoto } = usePhotoGallery();
+
   return (
     <IonPage>
       <IonHeader>
@@ -32,7 +35,7 @@ const Tab2: React.FC = () => {
           <IonFabButton
             onClick={() => {
               console.log("fab button clicked!");
-              // takePhoto();
+              takePhoto();
             }}
           >
             <IonIcon icon={camera} />
