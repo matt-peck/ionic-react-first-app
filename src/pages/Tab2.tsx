@@ -1,22 +1,43 @@
-import React from 'react';
-import { IonContent, IonHeader, IonItem, IonLabel, IonList, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import React from "react";
+import { camera, trash, close } from "ionicons/icons";
+import {
+  IonContent,
+  IonHeader,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+  IonFab,
+  IonFabButton,
+  IonIcon,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonImg,
+  IonActionSheet
+} from "@ionic/react";
 
 const Tab2: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Tab Two</IonTitle>
+          <IonTitle>Photo Gallery</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <IonList>
-          <IonItem routerLink="/tab2/details">
-            <IonLabel>
-              <h2>Go to detail</h2>
-            </IonLabel>
-          </IonItem>
-        </IonList>
+        <IonFab vertical="bottom" horizontal="center" slot="fixed">
+          <IonFabButton
+            onClick={() => {
+              console.log("fab button clicked!");
+              // takePhoto();
+            }}
+          >
+            <IonIcon icon={camera} />
+          </IonFabButton>
+        </IonFab>
       </IonContent>
     </IonPage>
   );
