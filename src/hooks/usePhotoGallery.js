@@ -11,10 +11,35 @@ import {
   FilesystemDirectory
 } from "@capacitor/core";
 
+const PHOTO_STORAGE = "photos";
+
 export const usePhotoGallery = () => {
   const { getPhoto } = useCamera();
   const { deleteFile, getUri, readFile, writeFile } = useFilesystem();
+  const { get, set } = useStorage();
   const [photos, setPhotos] = useState([]);
+
+  useEffect(() => {
+    const loadSaved = async () => {
+      const photoString = await get("photos");
+      console.log(photoString);
+      const photos = photoString ? JSON.parse(photoString) : [];
+      console.log(photos);
+
+      for (let photo of photos) {
+        console.log(photo);
+
+        const file = await readFile({
+          path: photo.filepath,
+          directory: FilesystemDirectory.Data
+        });
+        photo.base64 = `data:image/jpeg;base64,${file.data}`;
+      }
+
+      setPhotos(photos);
+    };
+    loadSaved();
+  }, [get, readFile]);
 
   const takePhoto = async () => {
     const cameraPhoto = await getPhoto({
@@ -27,6 +52,18 @@ export const usePhotoGallery = () => {
     const savedFileImage = await savePictures(cameraPhoto, fileName);
     const newPhotos = [savedFileImage, ...photos];
     setPhotos(newPhotos);
+
+    set(
+      PHOTO_STORAGE,
+      JSON.stringify(
+        newPhotos.map(p => {
+          // Don't save the base64 representation of the photo data,
+          // since it's already saved on the Filesystem
+          const { data, ...strippedPhoto } = p;
+          return strippedPhoto;
+        })
+      )
+    );
   };
 
   const savePictures = async (photo, fileName) => {
@@ -36,20 +73,19 @@ export const usePhotoGallery = () => {
       data: base64Data,
       directory: FilesystemDirectory.Data
     });
-    return getPhotoFile(photo, fileName);
+    const photoFile = await getPhotoFile(photo, fileName);
+    return photoFile;
   };
 
   const getPhotoFile = async (cameraPhoto, fileName) => {
     return {
-      filePath: fileName,
+      filepath: fileName,
       webviewPath: cameraPhoto.webPath
     };
   };
 
   return {
     photos,
-    takePhoto,
-    savePictures,
-    getPhotoFile
+    takePhoto
   };
 };

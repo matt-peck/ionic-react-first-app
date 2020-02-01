@@ -35,7 +35,7 @@ const Tab2 = () => {
           <IonRow>
             {photos.map((photo, index) => (
               <IonCol size="4" key={index}>
-                <IonImg src={photo.webviewPath} />
+                <IonImg src={photo.base64 ?? photo.webviewPath} />
               </IonCol>
             ))}
           </IonRow>
