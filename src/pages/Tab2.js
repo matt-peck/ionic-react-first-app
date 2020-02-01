@@ -41,12 +41,7 @@ const Tab2 = () => {
           </IonRow>
         </IonGrid>
         <IonFab vertical="bottom" horizontal="center" slot="fixed">
-          <IonFabButton
-            onClick={() => {
-              console.log("fab button clicked!");
-              takePhoto();
-            }}
-          >
+          <IonFabButton onClick={() => takePhoto()}>
             <IonIcon icon={camera} />
           </IonFabButton>
         </IonFab>

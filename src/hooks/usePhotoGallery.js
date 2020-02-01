@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useCamera } from "@ionic/react-hooks/camera";
-import { useFileSystem, base64FromPath } from "@ionic/react-hooks/filesystem";
+import { useFilesystem, base64FromPath } from "@ionic/react-hooks/filesystem";
 import { useStorage } from "@ionic/react-hooks/storage";
 import { isPlatform } from "@ionic/react";
 import {
@@ -13,6 +13,7 @@ import {
 
 export const usePhotoGallery = () => {
   const { getPhoto } = useCamera();
+  const { deleteFile, getUri, readFile, writeFile } = useFilesystem();
   const [photos, setPhotos] = useState([]);
 
   const takePhoto = async () => {
@@ -23,18 +24,32 @@ export const usePhotoGallery = () => {
     });
 
     const fileName = new Date().getTime() + ".jpeg";
-    const newPhotos = [
-      {
-        filepath: fileName,
-        webviewPath: cameraPhoto.webPath
-      },
-      ...photos
-    ];
+    const savedFileImage = await savePictures(cameraPhoto, fileName);
+    const newPhotos = [savedFileImage, ...photos];
     setPhotos(newPhotos);
+  };
+
+  const savePictures = async (photo, fileName) => {
+    const base64Data = await base64FromPath(photo.webPath);
+    await writeFile({
+      path: fileName,
+      data: base64Data,
+      directory: FilesystemDirectory.Data
+    });
+    return getPhotoFile(photo, fileName);
+  };
+
+  const getPhotoFile = async (cameraPhoto, fileName) => {
+    return {
+      filePath: fileName,
+      webviewPath: cameraPhoto.webPath
+    };
   };
 
   return {
     photos,
-    takePhoto
+    takePhoto,
+    savePictures,
+    getPhotoFile
   };
 };
