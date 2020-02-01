@@ -13,6 +13,7 @@ import {
 
 export const usePhotoGallery = () => {
   const { getPhoto } = useCamera();
+  const [photos, setPhotos] = useState([]);
 
   const takePhoto = async () => {
     const cameraPhoto = await getPhoto({
@@ -20,9 +21,20 @@ export const usePhotoGallery = () => {
       source: CameraSource.Camera,
       quality: 100
     });
+
+    const fileName = new Date().getTime() + ".jpeg";
+    const newPhotos = [
+      {
+        filepath: fileName,
+        webviewPath: cameraPhoto.webPath
+      },
+      ...photos
+    ];
+    setPhotos(newPhotos);
   };
 
   return {
+    photos,
     takePhoto
   };
 };
