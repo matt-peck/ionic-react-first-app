@@ -1,8 +1,11 @@
 {
-  "appId": "io.ionic.starter",
+  "appId": "mpd.ionic.first",
   "appName": "ionic-react-first-app",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "build",
-  "cordova": {}
+  "cordova": {},
+  "server": {
+    "url": "http://192.168.1.216:8100"
+  }
 }
